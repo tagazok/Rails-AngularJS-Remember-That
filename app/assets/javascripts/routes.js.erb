@@ -1,0 +1,13 @@
+'use strict';
+
+var thisApp = angular.module('thisApp', ['ngCookies', 'ui.bootstrap', 'ui', 'notes', 'google'])
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider
+	.when('/', {
+		templateUrl: '<%= asset_path("notes/index.html") %>',
+		controller: 'MainCtrl'
+	})
+	.otherwise({
+		redirectTo: '/'
+	});
+}]);

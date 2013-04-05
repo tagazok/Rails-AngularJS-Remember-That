@@ -1,0 +1,34 @@
+<div class="note-form">
+			<div class="top" ><div style="width:100%; height:100%;" class="{{note.color}}"></div></div>
+			<div class="newnote">
+				<div class="absright">
+					<button title="Delete" class="btn-link btn-primary notd" style="margin:0px 2px 0px 2px;" type="button" ng-click="delete(note)"><i class="icon-trash dark-grey"></i></button>
+					<button title="Archive" class="btn-link btn-primary notd" type="button" ng-click="changestatus(note, 'archived')"><i class="icon-download-alt dark-grey"></i></button>
+					<div class="btn-group right">
+						<a title="Change color" class="btn btn-link notd" data-toggle="dropdown" href="#">
+							<i class="icon-tint dark-grey"></i>
+						</a>
+						<ul class="dropdown-menu pull-right pull-top">
+							<div class="left color white link" ng-click="changecolor(note, 'white')"></div>
+							<div class="left color purple link" ng-click="changecolor(note, 'purple')"></div>
+							<div class="left color red link" ng-click="changecolor(note, 'red')"></div>
+							<div class="left color orange link" ng-click="changecolor(note, 'orange')"></div>
+							<div class="left color green link" ng-click="changecolor(note,'green')"></div>
+							<div class="left color blue link" ng-click="changecolor(note, 'blue')"></div>
+							<div class="clear"></div>
+						</ul>
+					</div>
+					<button title="Add image" class="btn-link btn-primary notd" type="button" ng-click="openDialog()"><i class="icon-picture dark-grey"></i></button>
+				</div>
+				<input ui-event="{ blur : 'saveCallback(note)' }" type="text" placeholder="" class="noteinput title" ng-model="note.title"/>
+
+				<div ui-event="{ blur : 'saveCallback(note)' }" contenteditable="true" class="noteinput textarea" ng-model="note.content">
+
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div class="bottom light-grey">
+				<span class="date">{{note.updated_at | date:'MMM dd yyyy' }}</span>
+				<span class="geolocation"><a title="Update geolocation" ng-click="updategeolocation(note)"><i class="icon-map-marker dark-grey"></i></a> <span class="city">{{note.data.geolocation.city}}</span> <span class="country">, {{note.data.geolocation.country}}</span></span>
+			</div>
+		</div>

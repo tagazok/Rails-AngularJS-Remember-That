@@ -1,0 +1,141 @@
+<div id="notification">
+	<center>
+		<span class="light-grey notification" ng-show="actions.SAVING == true">Saving...</span>
+		<span class="light-grey notification" ng-show="actions.DELETING == true">Deleting...</span>
+		<span class="light-grey notification" ng-show="actions.ARCHIVING == true">Archiving...</span>
+		<span class="light-grey notification" ng-show="actions.UNARCHIVING == true">Unarchiving...</span>
+		<span class="light-grey notification" ng-show="actions.GEOLOCALIZING == true">Geolocalizing...</span>
+		<span class="light-grey notification" ng-show="actions.GEOLOCALIZINGINFOS == true">Getting localisation informations...</span>
+	</center>
+</div>
+<div class="search">
+	<form class="form-inline">
+		<center>
+			<div class="input-prepend">
+				<span class="add-on"><i class="icon-search"></i></span>
+				<input class="span5" id="prependedInput" type="text" ng-model="search" placeholder="Search...">
+			</div>
+		</center>
+	</form>
+</div>
+<div class="list">
+	<div class="note-form note">
+		<div class="top" ><div style="width:100%; height:100%;" class="{{note.color}}"></div></div>
+		<div class="newnote">
+			<input type="text" placeholder="Title..." class="noteinput title" ng-model="note.title"/>
+			<div contenteditable="true" class="noteinput textarea" ng-model="note.content">
+			</div>
+			<div class="btn-toolbar">
+				<button class="btn btn-primary" type="button" ng-click="add()">Add</button>
+				<div class="btn-group dropup right">
+					<a title="Change color" class="btn btn-link notd right" data-toggle="dropdown" href="#">
+						<i class="icon-tint dark-grey"></i>
+					</a>
+					<ul class="dropdown-menu right pull-right pull-top">
+					 <div class="left color white link" ng-click="note.color='white'"></div>
+					 <div class="left color purple link" ng-click="note.color='purple'"></div>
+					 <div class="left color red link" ng-click="note.color='red'"></div>
+					 <div class="left color orange link" ng-click="note.color='orange'"></div>
+					 <div class="left color green link" ng-click="note.color='green'"></div>
+					 <div class="left color blue link" ng-click="note.color='blue'"></div>
+					 <div class="clear"></div>
+				 </ul>
+			 </div>
+			 <button title="Add image" class="btn-link btn-primary right notd" type="button" ng-click="openDialog()"><i class="icon-picture dark-grey"></i></button>
+			 <button title="Geolocalise me" class="btn-link btn-primary right notd" style="margin-right: 10px;" type="button" ng-click="addgeolocation()"><i class="icon-map-marker dark-grey"></i></button>
+
+		 </div>
+	 </div>
+	 <div class="clear"></div>
+ </div>
+</div>
+<div id="views-menu">
+	<center>
+		<div class="btn-group" data-toggle="buttons-radio" style="padding:10px;">
+			<button type="button" class="btn active" ng-click="view='list'" ><i class="icon-align-justify"></i></button>
+			<button type="button" class="btn" ng-click="view='cards'"><i class="icon-th"></i></button>
+		</div>
+	</center>
+</div>
+
+<div class="notes-list {{view}}">
+	<div class="note" ng-repeat="note in notes | filter:{ status: 'new' } | filter:search | orderBy:'id':true" data-ng-animate="'repeat'">
+		<div class="note-form">
+			<div class="top" ><div style="width:100%; height:100%;" class="{{note.color}}"></div></div>
+			<div class="newnote">
+				<div class="absright">
+					<button title="Delete" class="btn-link btn-primary notd" style="margin:0px 2px 0px 2px;" type="button" ng-click="delete(note)"><i class="icon-trash dark-grey"></i></button>
+					<button title="Archive" class="btn-link btn-primary notd" type="button" ng-click="changestatus(note, 'archived')"><i class="icon-download-alt dark-grey"></i></button>
+					<div class="btn-group right">
+						<a title="Change color" class="btn btn-link notd" data-toggle="dropdown" href="#">
+							<i class="icon-tint dark-grey"></i>
+						</a>
+						<ul class="dropdown-menu pull-right pull-top">
+							<div class="left color white link" ng-click="changecolor(note, 'white')"></div>
+							<div class="left color purple link" ng-click="changecolor(note, 'purple')"></div>
+							<div class="left color red link" ng-click="changecolor(note, 'red')"></div>
+							<div class="left color orange link" ng-click="changecolor(note, 'orange')"></div>
+							<div class="left color green link" ng-click="changecolor(note,'green')"></div>
+							<div class="left color blue link" ng-click="changecolor(note, 'blue')"></div>
+							<div class="clear"></div>
+						</ul>
+					</div>
+					<button title="Add image" class="btn-link btn-primary notd" type="button" ng-click="openDialog()"><i class="icon-picture dark-grey"></i></button>
+				</div>
+				<input ui-event="{ blur : 'saveCallback(note)' }" type="text" placeholder="" class="noteinput title" ng-model="note.title"/>
+
+				<div ui-event="{ blur : 'saveCallback(note)' }" contenteditable="true" class="noteinput textarea" ng-model="note.content">
+
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div class="bottom light-grey">
+				<span class="date">{{note.updated_at | date:'MMM dd yyyy' }}</span>
+				<span class="geolocation"><a title="Update geolocation" ng-click="updategeolocation(note)"><i class="icon-map-marker dark-grey"></i></a> <span class="city">{{note.data.geolocation.city}}</span> <span class="country">, {{note.data.geolocation.country}}</span></span>
+			</div>
+		</div>
+		<!-- <div ng-include src="'<%= asset_path("notes/list.html") %>'"></div> -->
+	</div>
+	<div class="clear"></div>
+</div>
+<center>
+
+	<div class="hr">
+		<span class="light-grey link" ng-click="showArchived=!showArchived">Archived notes</span>
+	</div>
+</center>
+<div class="notes-list {{view}}" collapse="showArchived">
+	<div class="note" ng-repeat="note in notes | filter:{ status: 'archived' } | filter:search | orderBy:'id':true">
+		<div class="note-form">
+			<div class="top" ><div style="width:100%; height:100%;" class="{{note.color}}"></div></div>
+			<div class="newnote">
+				<div class="absright">
+					<button title="Delete" class="btn-link btn-primary right notd" style="margin:0px 2px 0px 2px;" type="button" ng-click="delete(note)"><i class="icon-trash dark-grey"></i></button>
+					<button title="Unarchive" class="btn-link btn-primary right notd" type="button" ng-click="changestatus(note, 'new')"><i class="icon-upload-alt dark-grey"></i></button>
+					<div class="btn-group right">
+						<a title="Change color" class="btn btn-link notd" data-toggle="dropdown" href="#">
+							<i class="icon-tint dark-grey"></i>
+						</a>
+						<ul class="dropdown-menu right pull-right pull-top">
+							<div class="left color gray link" ng-click="note.color='gray'"></div>
+							<div class="left color purple link" ng-click="note.color='purple'"></div>
+							<div class="left color red link" ng-click="note.color='red'"></div>
+							<div class="left color orange link" ng-click="note.color='orange'"></div>
+							<div class="left color green link" ng-click="note.color='green'"></div>
+							<div class="left color blue link" ng-click="note.color='blue'"></div>
+							<div class="clear"></div>
+						</ul>
+					</div>
+					<button title="Add image" class="btn-link btn-primary right notd" type="button" ng-click="openDialog()"><i class="icon-picture dark-grey"></i></button>
+				</div>
+				<input type="text" placeholder="" class="noteinput title" ng-model="note.title"/>
+
+				<div contenteditable="true" class="noteinput textarea" ng-model="note.content">
+				</div>
+			</div>
+			<div class="bottom light-grey">{{note.updated_at | date:'MMM dd yyyy' }} {{note.data.geolocation}}</div>
+		</div>
+		<!-- <div ng-include src="'<%= asset_path("notes/list.html") %>'"></div> -->
+	</div>
+	<div class="clear"></div>
+</div>
